@@ -6,8 +6,8 @@ from utils import printMaze,getProblemInstance
 
 
 '''
-assignment3.py 10 219 -- HillClimbing 1 1 empty ILS
-assignment3.py 8 219 -- Genetic 200 10 1 truncation 0.95 0.1 rank
+main.py 10 219 -- HillClimbing 1 1 empty ILS
+main.py 8 219 -- Genetic 200 10 1 truncation 0.95 0.1 rank
 '''
 
 
