@@ -1,6 +1,5 @@
 
 import random
-from itertools import combinations
 from utils import memoize,A_StarImproved,getWallsBeneathPositions,heuristic2,get_max_mean
 class GeneticAlgorithm:
 	
