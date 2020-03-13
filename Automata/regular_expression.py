@@ -1,5 +1,5 @@
 import re
-from functools import partial,reduce,lru_cache
+from functools import partial,lru_cache
 from collections import defaultdict
 from graph import Graph,Node,Edge
 class RegularExpresion:
@@ -153,7 +153,7 @@ class RegularExpresion:
     def build_automata(self,d):
         raise NotImplementedError()
 
-    
+
 #######################
 #
 #   DRIVER CODE
