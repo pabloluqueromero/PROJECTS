@@ -23,6 +23,7 @@ class RegularExpresion:
                 l.append(expr[i])
                 left+=1
         return l
+    
     def empty_word(self,s):
         if len(s)>1 and s[1]=='*':
             return True
@@ -167,7 +168,7 @@ class RegularExpresion:
 
 #######################
 #
-#   FRIVER CODE
+#   DRIVER CODE
 #
 #######################
 expr = '0(1+0)*0+11(1+0)(1+0)*0'
