@@ -1,7 +1,7 @@
 import re
 from functools import partial,reduce,lru_cache
 from collections import defaultdict
-
+from graph import Graph,Node,Edge
 class RegularExpresion:
     def __init__(self,elements,expresion):
         self.elem = elements
@@ -131,7 +131,7 @@ class RegularExpresion:
         open_expressions.add(('',self.expr))
         solved.add(self.expr)
         solution=dict()
-        solution['Ɛ']=(self.expr,self.expr) #(before,after)
+        solution['']=(self.expr,self.expr) #(before,after)   Firstone->Ɛ
         while open_expressions:
             p,ex = open_expressions.pop()
             for e in self.elem:
@@ -150,8 +150,10 @@ class RegularExpresion:
                     solution[e+p]=(ex,cleaned)
         return solution
 
+    def build_automata(self,d):
+        raise NotImplementedError()
 
-
+    
 #######################
 #
 #   DRIVER CODE
