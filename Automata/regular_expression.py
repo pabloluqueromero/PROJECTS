@@ -84,6 +84,18 @@ class RegularExpresion:
             beta = ''.join(s[1:])
             return self.differentiate(d,alpha) + beta
 
+    def replace(self,alpha):
+        alpha=alpha.replace('+∅+','')
+        alpha=alpha.replace('+∅','')
+        alpha=alpha.replace('∅+','')
+        alpha=alpha.replace('()','')
+        alpha=alpha.replace('(Ɛ)','Ɛ')
+        alpha=alpha.replace('Ɛ(','(')
+        for e in self.elem: 
+            alpha=alpha.replace('Ɛ'+e,e)
+        alpha=alpha.replace('(∅)','∅')
+        return alpha
+    
     def clean_expression(self,expr):
         epsilon='Ɛ'
         void ='∅'
@@ -94,31 +106,14 @@ class RegularExpresion:
             if s[i] == '+':
                 if '∅' not in s[left:i]:
                     alpha = ''.join(s[left:i])
-                    alpha=alpha.replace('+∅+','')
-                    alpha=alpha.replace('+∅','')
-                    alpha=alpha.replace('∅+','')
-                    alpha=alpha.replace('()','')
-                    alpha=alpha.replace('(Ɛ)','Ɛ')
-                    alpha=alpha.replace('Ɛ(','(')
-                    for e in self.elem: 
-                        alpha=alpha.replace('Ɛ'+e,e)
-                    alpha=alpha.replace('(∅)','∅')
+                    alpha=self.replace(alpha)
                     plus_sign.append(alpha)
                 left = i+1
 
         if left!=0:
             if '∅' not in s[left:]:
                 alpha = ''.join(s[left:])
-                alpha=alpha.replace('+∅+','')
-                alpha=alpha.replace('+∅','')
-                alpha=alpha.replace('∅+','')
-                alpha=alpha.replace('()','')
-                alpha=alpha.replace('(Ɛ)','Ɛ')
-                alpha=alpha.replace('Ɛ(','(')
-                for e in self.elem: 
-                    alpha=alpha.replace('Ɛ'+e,e)
-                alpha=alpha.replace('(∅)','∅')
-                alpha=alpha.replace('(∅)','∅')
+                alpha=self.replace(alpha)
                 plus_sign.append(alpha)
                 return '+'.join(plus_sign)
             elif plus_sign:
@@ -127,16 +122,7 @@ class RegularExpresion:
         if '∅' in s:
             return '∅'
         else:
-            expr=expr.replace('+∅+','')
-            expr=expr.replace('+∅','')
-            expr=expr.replace('∅+','')
-            expr=expr.replace('()','')
-            expr=expr.replace('(Ɛ)','Ɛ')
-            expr=expr.replace('()','')
-            expr=expr.replace('(Ɛ)','Ɛ')
-            expr=expr.replace('Ɛ(','(')
-            for e in self.elem: 
-                expr=expr.replace('Ɛ'+e,e)
+            expr=self.replace(expr)
             return expr
 
     def full_derivative(self):
