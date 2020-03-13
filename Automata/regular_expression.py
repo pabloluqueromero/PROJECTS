@@ -2,6 +2,7 @@ import re
 from functools import partial,lru_cache
 from collections import defaultdict
 from graph import Graph,Node,Edge
+
 class RegularExpresion:
     def __init__(self,elements,expresion):
         self.elem = elements
@@ -183,8 +184,9 @@ for key,val in sorted(sol.items(),key = lambda x: len(x[0])):
     print('D {:7s} [{}] ={}'.format(key,val[0],val[1]))
 
 
-print("AUTOMATA:")
+print("\nAUTOMATA:")
 g = regex.build_automata(sol)
-print([node.tag for node in g.get_nodes()])
+print('States: ', [node.tag for node in g.get_nodes()])
+print('Transitions: ')
 for a in g.get_edges():
-    print((a.node1,a.node2,a.tag))
+    print('  ',a.tag ,': ', a.node1,' -> ',a.node2)
