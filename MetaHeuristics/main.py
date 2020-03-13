@@ -1,5 +1,5 @@
-from GeneticAlgorithm import GeneticAlgorithm
-from HillClimbing import HillClimbing
+from genetic_algorithm import GeneticAlgorithm
+from hill_climbing import HillClimbing
 from time import time
 from sys import argv
 from utils import printMaze,getProblemInstance

@@ -11,7 +11,7 @@ class GeneticAlgorithm:
 	def fitness(self,population):
 		evaluation=[]
 		for individual in population:
-			evaluation.append([individual,evaluate(individual)])
+			evaluation.append([individual,self.evaluate(individual)])
 		return evaluation
 
 	def generate_population(self):
