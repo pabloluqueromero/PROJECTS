@@ -131,7 +131,7 @@ class RegularExpresion:
         open_expressions.add(('',self.expr))
         solved.add(self.expr)
         solution=dict()
-        solution['']=(self.expr,self.expr) #(before,after)   Firstone->Ɛ
+        solution['']=(self.expr,self.expr) #(before,after)   First one->Ɛ
         while open_expressions:
             p,ex = open_expressions.pop()
             for e in self.elem:
@@ -145,24 +145,46 @@ class RegularExpresion:
                     #print('D {:7s} [{}] ={}'.format(p+e,ex,cleaned))
                 if cleaned not in solved :
                     solved.add(cleaned)
-                    open_expressions.add((p+e,cleaned))
-                if cleaned != '∅':
-                    solution[e+p]=(ex,cleaned)
+                    if cleaned!='∅' and cleaned != 'Ɛ':
+                        open_expressions.add((p+e,cleaned))
+                solution[p+e]=(ex,cleaned)
         return solution
 
     def build_automata(self,d):
-        raise NotImplementedError()
+        processed=dict()
+        g = Graph()
+        for key,value in sorted(d.items(),key = lambda x: len(x[0])):
+            value=value[1]
+            if value=='∅':
+                continue
+            if value in processed:
+                previous = key[:-1]
+                if d[key[:-1]][1] in processed:
+                    previous= processed[d[key[:-1]][1]]
+                g.add_edge(Edge(previous,processed[value],key[-1]))
+            else:
+                g.add_node(Node(key))
+                if len(key)>0:
+                    g.add_edge(Edge(key[:-1],key,key[-1]))
+                processed[value]=key
+        return g
 
 
-#######################
-#
-#   DRIVER CODE
-#
-#######################
+
+#DRIVER CODE
 expr = '0(1+0)*0+11(1+0)(1+0)*0'
 elem = {'0','1'}
 regex = RegularExpresion(elem,expr)
 
+#DERIVATIVE
+print("DERIVATIVES:")
 sol=regex.full_derivative()
-for key,val in sorted(sol.items(),key = lambda x: x[0]): 
+for key,val in sorted(sol.items(),key = lambda x: len(x[0])): 
     print('D {:7s} [{}] ={}'.format(key,val[0],val[1]))
+
+
+print("AUTOMATA:")
+g = regex.build_automata(sol)
+print([node.tag for node in g.get_nodes()])
+for a in g.get_edges():
+    print((a.node1,a.node2,a.tag))
