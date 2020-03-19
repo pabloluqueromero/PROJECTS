@@ -2,6 +2,9 @@ import re
 from functools import partial,lru_cache
 from collections import defaultdict
 from graph import Graph,Node,Edge
+import networkx as nx
+import numpy as np
+import matplotlib.pyplot as plt
 
 class RegularExpresion:
     def __init__(self,elements,expresion):
@@ -69,8 +72,14 @@ class RegularExpresion:
         #RULE 5: One structure with Kleene star
         if len(s)==2 and s[1]=='*':
             alpha = ''.join(s[0])
-            return self.differentiate(d,alpha) + expr
-
+            x = self.differentiate(d,alpha)
+            s_2=self.parse_parenthesis(x)
+            if len(s_2[0])>1 and '+' in s_2[0]:
+                return  x + expr
+            if len(s_2[0])==1 and len(s_2)==1:
+                return x+expr
+            return x[1:-1]+expr
+             
         #RULE 4: Multiplications - if contains epsilon we add derivate of Beta
         if self.empty_word(s):
             if s[1] == '*': 
@@ -79,7 +88,9 @@ class RegularExpresion:
             else:
                 alpha = ''.join(s[:1])
                 beta = ''.join(s[1:])
-            return self.differentiate(d,alpha)+beta+'+'+self.differentiate(d,beta)
+            a_d=self.differentiate(d,alpha)
+            a_b=self.differentiate(d,beta)
+            return a_d+beta+'+'+a_b
         else:
             alpha = ''.join(s[:1])
             beta = ''.join(s[1:])
@@ -103,19 +114,23 @@ class RegularExpresion:
         s = self.parse_parenthesis(expr)
         plus_sign = []
         left=0
+        in_sum=set()
         for i in range(len(s)):
             if s[i] == '+':
-                if '∅' not in s[left:i]:
+                if '∅' not in s[left:i]: 
                     alpha = ''.join(s[left:i])
                     alpha=self.replace(alpha)
-                    plus_sign.append(alpha)
+                    if alpha not in in_sum:
+                        plus_sign.append(alpha)
+                        in_sum.add(alpha)
                 left = i+1
 
         if left!=0:
             if '∅' not in s[left:]:
                 alpha = ''.join(s[left:])
                 alpha=self.replace(alpha)
-                plus_sign.append(alpha)
+                if alpha not in in_sum:
+                    plus_sign.append(alpha)
                 return '+'.join(plus_sign)
             elif plus_sign:
                 return '+'.join(plus_sign)
@@ -170,11 +185,38 @@ class RegularExpresion:
                 processed[value]=key
         return g
 
+        def draw_automata(self,automata):
+            G = nx.MultiDiGraph()
+            G.add_nodes_from([node.tag for node in g.get_nodes()])
+            for edge in automata.get_edges():
+                G.add_edge(edge.node1,edge.node2,t=float(edge.tag))
+            
+            return G
+        #nx.draw_networkx(G, arrows=True, **options)
+
+    def draw_automata(self,automata):
+        G = nx.MultiDiGraph()
+        # G.add_nodes_from(automata.get_nodes())
+        t = { node.tag:i for node,i in zip(automata.get_nodes(),range(len(automata)))}
+
+        for node in automata.get_nodes():
+             G.add_node(t[node.tag])
+        for edge in automata.get_edges():
+            G.add_edge(t[edge.node1],t[edge.node2],weight = float(edge.tag))
+        # options = {
+        #     'node_color': 'blue',
+        #     'node_size': 100,
+        #     'width': 3,
+        #     'arrowstyle': '-|>',
+        #     'arrowsize': 12,
+        #     }
+        # nx.draw_networkx(G, arrows=True, **options)
+
 
 
 #DRIVER CODE
-expr = '0(1+0)*0+11(1+0)(1+0)*0'
-elem = {'0','1'}
+expr = '0(11*1)*'
+elem = {'1','0'}
 regex = RegularExpresion(elem,expr)
 
 #DERIVATIVE
@@ -186,7 +228,9 @@ for key,val in sorted(sol.items(),key = lambda x: len(x[0])):
 
 print("\nAUTOMATA:")
 g = regex.build_automata(sol)
-print('States: ', [node.tag for node in g.get_nodes()])
+print('States: ', [node.tag if node.tag else 'Ɛ' for node in g.get_nodes()])
 print('Transitions: ')
 for a in g.get_edges():
-    print('  ',a.tag ,': ', a.node1,' -> ',a.node2)
+    print('  ',a.tag ,': ', a.node1 if a.node1 else 'Ɛ' ,' -> ',a.node2)
+
+regex.draw_automata(g)
