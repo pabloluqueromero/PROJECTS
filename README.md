@@ -23,6 +23,7 @@ There are some parameters that need to be configured such as:
   - Seed
   - Algorithm to be used
   - Optional parameters: heuristic (for informed algorithms), limit(for depth limited search).
+  
 There are 3 different heuristics available:
   - Manhattan Distance: well-known heuristic, where we add the distance to the last row of each.
   - Manhattan Distance Improved: same heuristic however we add +1 for each car with a wall in its way.
