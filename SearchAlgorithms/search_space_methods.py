@@ -1,5 +1,4 @@
 from node import Node
-from functools import partial
 # State= a tuple of size n where position i == j means: car number (i+1) is in position j of the maze
 #
 #			To reverse the encoding and extract the row and the column of a car we proceed as follows:
@@ -42,7 +41,7 @@ def test_goal(node,n):
 #	It is cheaper to do this than creating a lambda function that will add an overhead.
 
 def expand_node(maze,node):
-	return map(partial(apply_action,node),possibleActions(maze,node.state))
+	return map(lambda action:apply_action(node,action),possibleActions(maze,node.state))
 
 
 #	METHOD EXPLANATION:
@@ -137,7 +136,7 @@ def test_goal2(node,n):
 	return all(((car // n) == (n-1)) for car in node[0])
 
 def expand_node2(maze,node):
-	return map(partial(apply_action2,node),possibleActions(maze,node[0]))
+	return map(lambda action: apply_action2(node,action),possibleActions(maze,node[0]))
 	
 def apply_action2(node,action):
 	new_state=tuple([node[0][i]+action[0] if i == action[1] else _ for i, _ in enumerate(node[0])])
