@@ -22,5 +22,5 @@ as possible so that the search algorithm (A*) has to expand a maximum number of 
     
 In order to execute the algorithms download the folder, here is an example of execution:
 
-  Markup :  `python3 main.py 8 219 -- Genetic 200 10 1 truncation 0.95 0.1 rank`
-  Markup :  `python3 main.py 10 219 -- HillClimbing 1 1 empty ILS`
+      `python3 main.py 8 219 -- Genetic 200 10 1 truncation 0.95 0.1 rank`
+     `python3 main.py 10 219 -- HillClimbing 1 1 empty ILS`
